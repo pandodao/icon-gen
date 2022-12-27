@@ -18,18 +18,14 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"path"
 
 	"github.com/fatih/structs"
-	homedir "github.com/mitchellh/go-homedir"
-	"github.com/pandodao/icon-gen/config"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
 var (
 	cfgFile   string
-	cfg       config.Config
 	debugMode bool
 
 	initialized bool
@@ -52,44 +48,9 @@ func Execute(ver string) {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig, initLogging, initDone)
+	cobra.OnInitialize(initLogging, initDone)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.icongen.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&debugMode, "debug", false, "toggle debug mode")
-}
-
-func initConfig() {
-	if initialized {
-		return
-	}
-
-	if cfgFile == "" {
-		dir, err := homedir.Dir()
-		if err != nil {
-			panic(err)
-		}
-
-		filename := path.Join(dir, ".icongen.yaml")
-		info, err := os.Stat(filename)
-		if !os.IsNotExist(err) && !info.IsDir() {
-			cfgFile = filename
-		}
-	}
-
-	if cfgFile == "" {
-		filename := "config.yaml"
-		if info, err := os.Stat(filename); !os.IsNotExist(err) && !info.IsDir() {
-			cfgFile = filename
-		}
-	}
-
-	if cfgFile != "" {
-		logrus.Debugln("use config file", cfgFile)
-	}
-
-	if err := config.Load(cfgFile, &cfg); err != nil {
-		panic(err)
-	}
 }
 
 func initLogging() {

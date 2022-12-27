@@ -20,11 +20,11 @@ import (
 	"context"
 	"image"
 	"image/draw"
-	"io/ioutil"
 	"strings"
 
 	color_extractor "github.com/marekm4/color-extractor"
 	"github.com/nfnt/resize"
+	"github.com/pandodao/icon-gen/templates"
 	"github.com/spf13/cobra"
 	"github.com/srwiley/oksvg"
 	"github.com/srwiley/rasterx"
@@ -79,11 +79,6 @@ func drawFswapLPToken(ctx context.Context, asset1, asset2 Asset) (*image.RGBA, e
 	}
 
 	{
-		svgData, err := ioutil.ReadFile(cfg.Template.Fswap)
-		if err != nil {
-			return nil, err
-		}
-
 		color1 := asset1.ColorHex
 		color2 := asset2.ColorHex
 		if color1 == "" {
@@ -93,8 +88,8 @@ func drawFswapLPToken(ctx context.Context, asset1, asset2 Asset) (*image.RGBA, e
 			color2 = hexColor(color_extractor.ExtractColors(icon2)[0])
 		}
 
-		svgData = []byte(strings.ReplaceAll(
-			strings.ReplaceAll(string(svgData), "#DE400B", color1),
+		svgData := []byte(strings.ReplaceAll(
+			strings.ReplaceAll(templates.FswapLpTemplate, "#DE400B", color1),
 			"#19C0FC",
 			color2,
 		))

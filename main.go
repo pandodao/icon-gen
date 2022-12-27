@@ -16,6 +16,7 @@ limitations under the License.
 package main
 
 import (
+	_ "embed"
 	"fmt"
 
 	"github.com/pandodao/icon-gen/cmd"

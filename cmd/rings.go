@@ -17,11 +17,13 @@ package cmd
 
 import (
 	"context"
+	_ "embed"
 	"image"
 	"image/draw"
-	"os"
+	"strings"
 
 	"github.com/nfnt/resize"
+	"github.com/pandodao/icon-gen/templates"
 	"github.com/spf13/cobra"
 )
 
@@ -68,12 +70,7 @@ func drawRingsToken(ctx context.Context, asset Asset) (*image.RGBA, error) {
 	}
 
 	{
-		reader, err := os.Open(cfg.Template.Rings)
-		if err != nil {
-			return nil, err
-		}
-
-		mask, _, err := image.Decode(reader)
+		mask, _, err := image.Decode(strings.NewReader(templates.RingsTemplate))
 		if err != nil {
 			return nil, err
 		}
